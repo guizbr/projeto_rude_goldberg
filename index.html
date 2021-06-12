@@ -66,6 +66,9 @@
             etapa1(scene);
             etapa2(scene);
 
+
+
+
             return scene;
 
         };
@@ -108,12 +111,14 @@
             var brickHeight = 4;
             var numBricksLength = 6;
             var numBricksHeight = 8;
-            var y = brickHeight * 0.5;
+            var y = -6;
             var brick = BABYLON.MeshBuilder.CreateBox("", { width: brickLength, height: brickHeight, depth: brickDepth }, scene)
             brick.position = new BABYLON.Vector3(0, y, -48.5);
             brick.material = new BABYLON.StandardMaterial("", scene);
             brick.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-            brick.physicsImpostor = new BABYLON.PhysicsImpostor(brick, BABYLON.PhysicsImpostor.BoxImpostor, { mass: brickMass, friction: 0.3 }, scene);
+            brick.physicsImpostor = new BABYLON.PhysicsImpostor(brick, BABYLON.PhysicsImpostor.BoxImpostor, { mass: brickMass, friction: 0 }, scene);
+
+
         }
 
         window.initFunction = async function () {
