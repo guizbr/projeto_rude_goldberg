@@ -70,6 +70,7 @@
             var cont = 0;
             etapa2(scene, sphere, cont);
             etapa3(scene);
+            etapa5(scene);
 
 
             return scene;
@@ -231,6 +232,44 @@
                 }
                 cont2 = 1;
             });
+        }
+
+        function etapa5(scene) {
+            var ground5 = BABYLON.Mesh.CreateGround("ground3", 10, 40, 2, scene);
+            ground5.position.y = -18;
+            ground5.position.z = 60;
+            ground5.position.x = 33;
+            ground5.physicsImpostor = new BABYLON.PhysicsImpostor(ground5, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: -1000, restitution: 0 }, scene);
+
+            var brick5 = BABYLON.MeshBuilder.CreateBox("", { width: 3, height: 13, depth: 2 }, scene)
+            brick5.position = new BABYLON.Vector3(33, -11.5, 45);
+            brick5.material = new BABYLON.StandardMaterial("", scene);
+            brick5.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick5.physicsImpostor = new BABYLON.PhysicsImpostor(brick5, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
+
+            var brick6 = BABYLON.MeshBuilder.CreateBox("", { width: 3, height: 13, depth: 2 }, scene)
+            brick6.position = new BABYLON.Vector3(33, -11.5, 49);
+            brick6.material = new BABYLON.StandardMaterial("", scene);
+            brick6.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick6.physicsImpostor = new BABYLON.PhysicsImpostor(brick6, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
+
+            var brick7 = BABYLON.MeshBuilder.CreateBox("", { width: 3, height: 13, depth: 2 }, scene)
+            brick7.position = new BABYLON.Vector3(33, -11.5, 53);
+            brick7.material = new BABYLON.StandardMaterial("", scene);
+            brick7.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick7.physicsImpostor = new BABYLON.PhysicsImpostor(brick7, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
+
+            var brick8 = BABYLON.MeshBuilder.CreateBox("", { width: 3, height: 13, depth: 2 }, scene)
+            brick8.position = new BABYLON.Vector3(33, -11.5, 57);
+            brick8.material = new BABYLON.StandardMaterial("", scene);
+            brick8.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick8.physicsImpostor = new BABYLON.PhysicsImpostor(brick8, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
+
+            var brick9 = BABYLON.MeshBuilder.CreateBox("", { width: 3, height: 13, depth: 2 }, scene)
+            brick9.position = new BABYLON.Vector3(33, -11.5, 61);
+            brick9.material = new BABYLON.StandardMaterial("", scene);
+            brick9.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick9.physicsImpostor = new BABYLON.PhysicsImpostor(brick9, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
         }
 
         window.initFunction = async function () {
