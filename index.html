@@ -63,8 +63,16 @@
             // Default intensity is 1. Let's dim the light a small amount
             light.intensity = 0.7;
 
+            BABYLON.SceneLoader.ImportMesh(null,"https://models.babylonjs.com/vintageDeskFan/","vintageFan_animated.gltf",scene,function (meshes) {
+            var vent = meshes[0];
+            vent.checkCollisions = true;
+            vent.rotation.x = 0.8;
+            vent.scaling.scaleInPlace(0.2);
+    });
+
             var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
             sphere.position.y = 2;
+            sphere.position.z = -13;
 
             etapa1(scene, sphere);
             var cont = 0;
