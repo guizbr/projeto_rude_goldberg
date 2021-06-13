@@ -67,7 +67,8 @@
             sphere.position.y = 2;
 
             etapa1(scene, sphere);
-            etapa2(scene, sphere);
+            var cont = 0;
+            etapa2(scene, sphere, cont);
             etapa3(scene);
 
 
@@ -99,7 +100,7 @@
             })
         }
 
-        function etapa2(scene, sphere) {
+        function etapa2(scene, sphere, cont) {
             var ground2 = BABYLON.Mesh.CreateGround("ground2", 10, 40, 2, scene);
             ground2.position.y = -30;
             ground2.position.z = -60;
@@ -143,10 +144,13 @@
 
 
             sphere.physicsImpostor.registerOnPhysicsCollide(cylinder.physicsImpostor, function (main, collided) {
-                cylinder.material = cor2;
-                arm.physicsImpostor = new BABYLON.PhysicsImpostor(arm, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
-                upright.physicsImpostor.addJoint(arm.physicsImpostor, joint);
-                joint.setMotor(1, 1000);
+                if (cont == 0) {
+                    cylinder.material = cor2;
+                    arm.physicsImpostor = new BABYLON.PhysicsImpostor(arm, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
+                    upright.physicsImpostor.addJoint(arm.physicsImpostor, joint);
+                    joint.setMotor(1, 1000);
+                }
+                cont = 1;
             });
         }
 
@@ -169,6 +173,64 @@
             brick.material = new BABYLON.StandardMaterial("", scene);
             brick.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
             brick.physicsImpostor = new BABYLON.PhysicsImpostor(brick, BABYLON.PhysicsImpostor.BoxImpostor, { mass: brickMass, friction: 0 }, scene);
+            var cont2 = 0
+            etapa4(scene, brick, cont2);
+        }
+
+        function etapa4(scene, brick, cont2) {
+            var cannonfoot = BABYLON.MeshBuilder.CreateBox("Foot", { width: 2, height: 1, depth: 3 }, scene);
+            cannonfoot.position.set(33, -7.5, 28);
+            cannonfoot.rotation.set(0, 0, 0);
+            cannonfoot.physicsImpostor = new BABYLON.PhysicsImpostor(cannonfoot, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 50000, friction: 0 }, scene);
+            var cannontube = BABYLON.MeshBuilder.CreateCylinder("Tube", { height: 5, diameter: 2, tessellation: 16 }, scene);
+            cannontube.position.set(0, 2, 0);
+
+            var itarg = BABYLON.Mesh.CreateBox("targ", 1, scene);
+            itarg.position.y = 10;
+            itarg.visibility = .1;
+            itarg.parent = cannontube;
+
+            cannontube.rotation.set(Math.PI / 2, 0, 0);
+            cannontube.parent = cannonfoot;
+
+            var power = 0.5;
+            var cannonBlastSound = new BABYLON.Sound("music", "https://assets.babylonjs.com/sound/cannonBlast.mp3", scene);
+            var firebullet = function (power) {
+                var bullet = BABYLON.MeshBuilder.CreateSphere("Bullet", { segments: 3, diameter: 1 }, scene);
+                bullet.position = cannontube.getAbsolutePosition();
+                bullet.physicsImpostor = new BABYLON.PhysicsImpostor(bullet, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0.1, friction: 0.5, restition: 0.3 }, scene);
+
+                var dir = itarg.getAbsolutePosition().subtract(cannontube.getAbsolutePosition());
+                bullet.physicsImpostor.applyImpulse(dir.scale(power), cannontube.getAbsolutePosition());
+                bullet.life = 0
+
+                bullet.step = () => {
+                    bullet.life++
+                    if (bullet.life > 200 && bullet.physicsImpostor) {
+                        bullet.physicsImpostor.dispose()
+                        bullet.dispose()
+                    }
+                }
+
+                bullet.physicsImpostor.onCollideEvent = (e, t) => {
+                    console.log(e, t)
+                }
+                cannonBlastSound.play();
+                scene.onBeforeRenderObservable.add(bullet.step)
+
+            }
+
+            window.addEventListener("keydown", function (evt) {
+                if (evt.keyCode === 85) { // "u" rotate cannon up
+                    firebullet(power);
+                }
+            });
+            cannonfoot.physicsImpostor.registerOnPhysicsCollide(brick.physicsImpostor, function (main, collided) {
+                if (cont2 == 0) {
+                    firebullet(power);
+                }
+                cont2 = 1;
+            });
         }
 
         window.initFunction = async function () {
