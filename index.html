@@ -63,9 +63,11 @@
             // Default intensity is 1. Let's dim the light a small amount
             light.intensity = 0.7;
 
-            etapa1(scene);
-            etapa2(scene);
+            var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
+            sphere.position.y = 2;
 
+            etapa1(scene, sphere);
+            etapa2(scene, sphere);
 
 
 
@@ -73,9 +75,7 @@
 
         };
 
-        function etapa1(scene) {
-            var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
-            sphere.position.y = 2;
+        function etapa1(scene, sphere) {
 
             var ground = BABYLON.Mesh.CreateGround("ground1", 10, 40, 2, scene);
             ground.position.z = -20;
@@ -99,24 +99,68 @@
             })
         }
 
-        function etapa2(scene) {
+        function etapa2(scene, sphere) {
             var ground2 = BABYLON.Mesh.CreateGround("ground2", 10, 40, 2, scene);
-            ground2.position.y = -10;
+            ground2.position.y = -30;
             ground2.position.z = -60;
             ground2.physicsImpostor = new BABYLON.PhysicsImpostor(ground2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
 
-            var brickMass = 1;
-            var brickLength = 2;
-            var brickDepth = 1;
-            var brickHeight = 4;
-            var numBricksLength = 6;
-            var numBricksHeight = 8;
-            var y = -6;
-            var brick = BABYLON.MeshBuilder.CreateBox("", { width: brickLength, height: brickHeight, depth: brickDepth }, scene)
-            brick.position = new BABYLON.Vector3(0, y, -48.5);
-            brick.material = new BABYLON.StandardMaterial("", scene);
-            brick.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-            brick.physicsImpostor = new BABYLON.PhysicsImpostor(brick, BABYLON.PhysicsImpostor.BoxImpostor, { mass: brickMass, friction: 0 }, scene);
+            var cor = new BABYLON.StandardMaterial("cor", scene);
+            cor.diffuseColor = new BABYLON.Color3(1, 0, 0);
+            var cor2 = new BABYLON.StandardMaterial("cor", scene);
+            cor2.diffuseColor = new BABYLON.Color3(0, 1, 0);
+            var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder", { height: 1, diameter: 5 }, scene);
+            cylinder.position.y = -28;
+            cylinder.position.z = -54;
+            cylinder.material = cor;
+
+            var cylinder2 = BABYLON.MeshBuilder.CreateCylinder("cylinder2", { height: 2, diameter: 7 }, scene);
+            cylinder2.position.y = -29;
+            cylinder2.position.z = -54;
+
+            cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+            cylinder2.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder2, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+
+            var base = BABYLON.MeshBuilder.CreateBox("base", { width: 6, depth: 6, height: 3 }, scene);
+            base.position = new BABYLON.Vector3(0, -30, -10);
+            base.physicsImpostor = new BABYLON.PhysicsImpostor(base, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            //13
+            var upright = BABYLON.MeshBuilder.CreateBox("upright", { width: 3, depth: 3, height: 24 }, scene);
+            upright.position = new BABYLON.Vector3(0, -17, -10);
+            upright.physicsImpostor = new BABYLON.PhysicsImpostor(upright, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+
+            var arm = BABYLON.MeshBuilder.CreateBox("arm", { width: 40, depth: 1, height: 1 }, scene);
+            arm.position = new BABYLON.Vector3(-15, -4.5, -10);
+
+
+            let joint = new BABYLON.HingeJoint({
+                mainPivot: new BABYLON.Vector3(0, 12.5, 0),
+                connectedPivot: new BABYLON.Vector3(15, 0, 0),
+                mainAxis: new BABYLON.Vector3(0, 1, 0),
+                connectedAxis: new BABYLON.Vector3(0, 1, 0)
+            });
+
+
+
+            sphere.physicsImpostor.registerOnPhysicsCollide(cylinder.physicsImpostor, function (main, collided) {
+                cylinder.material = cor2;
+                arm.physicsImpostor = new BABYLON.PhysicsImpostor(arm, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
+                upright.physicsImpostor.addJoint(arm.physicsImpostor, joint);
+                joint.setMotor(1, 1000);
+            });
+
+            // var brickMass = 1;
+            // var brickLength = 2;
+            // var brickDepth = 1;
+            // var brickHeight = 4;
+            // var numBricksLength = 6;
+            // var numBricksHeight = 8;
+            // var y = -6;
+            // var brick = BABYLON.MeshBuilder.CreateBox("", { width: brickLength, height: brickHeight, depth: brickDepth }, scene)
+            // brick.position = new BABYLON.Vector3(0, y, -48.5);
+            // brick.material = new BABYLON.StandardMaterial("", scene);
+            // brick.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            // brick.physicsImpostor = new BABYLON.PhysicsImpostor(brick, BABYLON.PhysicsImpostor.BoxImpostor, { mass: brickMass, friction: 0 }, scene);
 
 
         }
@@ -148,6 +192,8 @@
         window.addEventListener("resize", function () {
             engine.resize();
         });
+
+
     </script>
 </body>
 
