@@ -71,6 +71,7 @@
             etapa2(scene, sphere, cont);
             etapa3(scene);
             etapa5(scene);
+            etapa6(scene);
 
 
             return scene;
@@ -272,6 +273,47 @@
             brick9.physicsImpostor = new BABYLON.PhysicsImpostor(brick9, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
         }
 
+        function etapa6(scene) {
+            var brick10 = BABYLON.MeshBuilder.CreateBox("", { width: 5, height: 7, depth: 2 }, scene)
+            brick10.position = new BABYLON.Vector3(33, -14.5, 73);
+            brick10.material = new BABYLON.StandardMaterial("", scene);
+            brick10.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick10.physicsImpostor = new BABYLON.PhysicsImpostor(brick10, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 10000, friction: 0 }, scene);
+
+            var brick11 = BABYLON.MeshBuilder.CreateBox("", { width: 5, height: 5, depth: 2 }, scene)
+            brick11.position = new BABYLON.Vector3(33, -15.5, 75);
+            brick11.material = new BABYLON.StandardMaterial("", scene);
+            brick11.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick11.physicsImpostor = new BABYLON.PhysicsImpostor(brick11, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 100000, friction: 0 }, scene);
+
+            var brick12 = BABYLON.MeshBuilder.CreateBox("", { width: 5, height: 3, depth: 2 }, scene)
+            brick12.position = new BABYLON.Vector3(33, -16.5, 77);
+            brick12.material = new BABYLON.StandardMaterial("", scene);
+            brick12.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick12.physicsImpostor = new BABYLON.PhysicsImpostor(brick12, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 100000, friction: 0 }, scene);
+
+            var sphere6 = BABYLON.Mesh.CreateSphere("sphere6", 4, 2, scene);
+            sphere6.position.x = 33;
+            sphere6.position.y = -10;
+            sphere6.position.z = 73;
+            sphere6.physicsImpostor = new BABYLON.PhysicsImpostor(sphere6, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 20 }, scene);
+
+            var shape = [
+                new BABYLON.Vector3(-5, 0, -5),
+                new BABYLON.Vector3(5, 0, -5),
+                new BABYLON.Vector3(5, 0, 5),
+                new BABYLON.Vector3(-5, 0, 5)
+            ];
+
+            const holes = [circleLines(2)];
+            var polygon = BABYLON.MeshBuilder.ExtrudePolygon("polygon",
+                { shape: shape, holes: holes, depth: 1, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+            polygon.position.x = 33;
+            polygon.position.y = -18;
+            polygon.position.z = 85;
+            polygon.physicsImpostor = new BABYLON.PhysicsImpostor(polygon, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 }, scene);
+        }
+
         window.initFunction = async function () {
             var asyncEngineCreation = async function () {
                 try {
@@ -301,6 +343,19 @@
         });
 
 
+        function circleLines(radius) {
+            var tes = 60;
+            var pi2 = Math.PI * 2;
+            var step = pi2 / tes;
+            var path = [];
+            for (var i = 0; i < pi2; i += step) {
+                var x = radius * Math.sin(i);
+                var z = radius * Math.cos(i);
+                var y = radius;
+                path.push(new BABYLON.Vector3(x, y, z));
+            }
+            return path;
+        }
     </script>
 </body>
 
