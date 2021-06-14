@@ -63,13 +63,6 @@
             // Default intensity is 1. Let's dim the light a small amount
             light.intensity = 0.7;
 
-            BABYLON.SceneLoader.ImportMesh(null,"https://models.babylonjs.com/vintageDeskFan/","vintageFan_animated.gltf",scene,function (meshes) {
-            var vent = meshes[0];
-            vent.checkCollisions = true;
-            vent.rotation.x = 0.8;
-            vent.scaling.scaleInPlace(0.2);
-    });
-
             var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
             sphere.position.y = 2;
             sphere.position.z = -13;
@@ -80,6 +73,15 @@
             etapa3(scene);
             etapa5(scene);
             etapa6(scene);
+
+            // Skybox - a imagem do fundo
+            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox4", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skyboxMaterial.disableLighting = true;
+            skybox.material = skyboxMaterial;
 
 
             return scene;
