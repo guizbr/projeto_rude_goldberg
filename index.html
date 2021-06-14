@@ -63,16 +63,23 @@
             // Default intensity is 1. Let's dim the light a small amount
             light.intensity = 0.7;
 
+            var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
+            groundMaterial.diffuseTexture = new BABYLON.Texture("textures/wood.jpg", scene);
+            groundMaterial.diffuseTexture.uScale = 5;
+            groundMaterial.diffuseTexture.vScale = 5;
+            groundMaterial.specularColor = new BABYLON.Color3(.2, .2, .2);
+
             var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
             sphere.position.y = 2;
             sphere.position.z = -13;
 
-            etapa1(scene, sphere);
+            etapa1(scene, sphere, groundMaterial);
             var cont = 0;
-            etapa2(scene, sphere, cont);
-            etapa3(scene);
-            etapa5(scene);
+            etapa2(scene, sphere, cont, groundMaterial);
+            etapa3(scene, groundMaterial);
+            etapa5(scene, groundMaterial);
             etapa6(scene);
+
 
             // Skybox - a imagem do fundo
             var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
@@ -82,16 +89,17 @@
             skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
             skyboxMaterial.disableLighting = true;
             skybox.material = skyboxMaterial;
-
-
+            
             return scene;
 
         };
 
-        function etapa1(scene, sphere) {
+        function etapa1(scene, sphere, groundMaterial) {
 
             var ground = BABYLON.Mesh.CreateGround("ground1", 10, 40, 2, scene);
-            ground.position.z = -20;
+            ground.position.z = -20;            
+            ground.material = groundMaterial;
+
 
             var holder1 = BABYLON.MeshBuilder.CreateBox("holder1", { width: 2, height: 2, depth: 40 }, scene);
             holder1.position.y = 1;
@@ -112,11 +120,13 @@
             })
         }
 
-        function etapa2(scene, sphere, cont) {
+        function etapa2(scene, sphere, cont, groundMaterial) {
             var ground2 = BABYLON.Mesh.CreateGround("ground2", 10, 40, 2, scene);
             ground2.position.y = -30;
             ground2.position.z = -60;
             ground2.physicsImpostor = new BABYLON.PhysicsImpostor(ground2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            ground2.material = groundMaterial;
+
 
             var cor = new BABYLON.StandardMaterial("cor", scene);
             cor.diffuseColor = new BABYLON.Color3(1, 0, 0);
@@ -166,13 +176,15 @@
             });
         }
 
-        function etapa3(scene) {
+        function etapa3(scene, groundMaterial) {
             var ground3 = BABYLON.Mesh.CreateGround("ground3", 10, 40, 2, scene);
             ground3.position.y = -8;
             ground3.position.z = 10;
             ground3.position.x = 33;
             ground3.physicsImpostor = new BABYLON.PhysicsImpostor(ground3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            ground3.material = groundMaterial;
 
+            
             var brickMass = 1;
             var brickLength = 2;
             var brickDepth = 1;
@@ -245,12 +257,13 @@
             });
         }
 
-        function etapa5(scene) {
+        function etapa5(scene, groundMaterial) {
             var ground5 = BABYLON.Mesh.CreateGround("ground3", 10, 40, 2, scene);
             ground5.position.y = -18;
             ground5.position.z = 60;
             ground5.position.x = 33;
             ground5.physicsImpostor = new BABYLON.PhysicsImpostor(ground5, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: -1000, restitution: 0 }, scene);
+            ground5.material = groundMaterial;
 
             var brick5 = BABYLON.MeshBuilder.CreateBox("", { width: 3, height: 13, depth: 2 }, scene)
             brick5.position = new BABYLON.Vector3(33, -11.5, 45);
