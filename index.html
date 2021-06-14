@@ -42,20 +42,20 @@
 <body>
     <canvas id="renderCanvas"></canvas>
     <script>
-            var canvas = document.getElementById("renderCanvas");
+        var canvas = document.getElementById("renderCanvas");
 
-            var engine = null;
-            var scene = null;
-            var sceneToRender = null;
-            var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
-            var global = {};
-            var createScene = function () {
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+        var global = {};
+        var createScene = function () {
 
             var scene = new BABYLON.Scene(engine);
             global.scene = scene;
             scene.enablePhysics();
 
-            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 3, -20), scene);
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(180, 60, 0), scene);
 
 
             camera.setTarget(BABYLON.Vector3.Zero());
@@ -87,6 +87,16 @@
 
             };
 
+            // GUI
+            var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            var instructions = new BABYLON.GUI.TextBlock();
+            instructions.text = "Use WASD para voar por ai e gire a visão com o mouse";
+            instructions.color = "black";
+            instructions.fontSize = 16;
+            instructions.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
+            instructions.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
+            advancedTexture.addControl(instructions);
+
             // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
 
@@ -110,7 +120,6 @@
 
             var groundbrick = new BABYLON.StandardMaterial("groundbrick", scene);
             groundbrick.diffuseTexture = new BABYLON.Texture("textures/speckles.jpg", scene);
-            //groundbrick.diffuseTexture.uScale = 3;
             groundbrick.diffuseTexture.vScale = 3;
             groundbrick.specularColor = new BABYLON.Color3(.1, .1, .1);
 
@@ -120,15 +129,12 @@
             rainbow.diffuseTexture.vScale = 3;
             rainbow.specularColor = new BABYLON.Color3(.1, .1, .1);
 
-            /*var esphereTexture = new BABYLON.PhotoDome("esphereTexture", "textures/360photo.jpg", { resolution: 32, size: 1000 }, scene);
-            groundbrick.diffuseTexture = new BABYLON.Texture("textures/textures/360photo.jpg", scene);
-            esphereTexture.diffuseTexture.uScale = 30;
-            esphereTexture.diffuseTexture.vScale = 30;
-            esphereTexture.specularColor = new BABYLON.Color3(.4, .4, .4);*/
-
             var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
             sphere.position.y = 2;
             sphere.position.z = -13;
+            var cor = new BABYLON.StandardMaterial("cor", scene);
+            cor.diffuseColor = new BABYLON.Color3(0, 0, 1);
+            sphere.material = cor;
 
             etapa1(scene, sphere, groundMaterial, groundbrick);
             var cont = 0;
@@ -283,10 +289,14 @@
             cannontube.rotation.set(Math.PI / 2, 0, 0);
             cannontube.parent = cannonfoot;
 
+            var corb = new BABYLON.StandardMaterial("cor", scene);
+            corb.diffuseColor = new BABYLON.Color3(1, 0, 0);
+
             var power = 0.5;
             var cannonBlastSound = new BABYLON.Sound("music", "https://assets.babylonjs.com/sound/cannonBlast.mp3", scene);
             var firebullet = function (power) {
                 var bullet = BABYLON.MeshBuilder.CreateSphere("Bullet", { segments: 3, diameter: 1 }, scene);
+                bullet.material = corb;
                 bullet.position = cannontube.getAbsolutePosition();
                 bullet.physicsImpostor = new BABYLON.PhysicsImpostor(bullet, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0.1, friction: 0.5, restition: 0.3 }, scene);
 
@@ -378,6 +388,9 @@
             sphere6.position.y = -10;
             sphere6.position.z = 73;
             sphere6.physicsImpostor = new BABYLON.PhysicsImpostor(sphere6, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 20 }, scene);
+            var cor6 = new BABYLON.StandardMaterial("cor", scene);
+            cor6.diffuseColor = new BABYLON.Color3(0, 0, 1);
+            sphere6.material = cor6;
 
             var shape = [
                 new BABYLON.Vector3(-5, 0, -5),
