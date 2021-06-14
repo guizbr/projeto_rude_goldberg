@@ -63,23 +63,44 @@
             // Default intensity is 1. Let's dim the light a small amount
             light.intensity = 0.7;
 
+            // Skybox - a imagem do fundo
+            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox4", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skyboxMaterial.disableLighting = true;
+            skybox.material = skyboxMaterial;
+
             var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", scene);
             groundMaterial.diffuseTexture = new BABYLON.Texture("textures/wood.jpg", scene);
             groundMaterial.diffuseTexture.uScale = 5;
             groundMaterial.diffuseTexture.vScale = 5;
             groundMaterial.specularColor = new BABYLON.Color3(.2, .2, .2);
 
+            var groundbrick = new BABYLON.StandardMaterial("groundbrick", scene);
+            groundbrick.diffuseTexture = new BABYLON.Texture("textures/speckles.jpg", scene);
+            //groundbrick.diffuseTexture.uScale = 3;
+            groundbrick.diffuseTexture.vScale = 3;
+            groundbrick.specularColor = new BABYLON.Color3(.1, .1, .1);
+
+            /*var esphereTexture = new BABYLON.PhotoDome("esphereTexture", "textures/360photo.jpg", { resolution: 32, size: 1000 }, scene);
+            groundbrick.diffuseTexture = new BABYLON.Texture("textures/textures/360photo.jpg", scene);
+            esphereTexture.diffuseTexture.uScale = 30;
+            esphereTexture.diffuseTexture.vScale = 30;
+            esphereTexture.specularColor = new BABYLON.Color3(.4, .4, .4);*/
+
             var sphere = BABYLON.Mesh.CreateSphere("sphere1", 4, 2, scene);
             sphere.position.y = 2;
             sphere.position.z = -13;
 
-            etapa1(scene, sphere, groundMaterial);
+            etapa1(scene, sphere, groundMaterial, groundbrick);
             var cont = 0;
-            etapa2(scene, sphere, cont, groundMaterial);
-            etapa3(scene, groundMaterial);
+            etapa2(scene, sphere, cont, groundMaterial, groundbrick);
+            etapa3(scene, groundMaterial, groundbrick);
             etapa5(scene, groundMaterial);
-            etapa6(scene);
-            etapa7(scene);
+            etapa6(scene, groundbrick);
+            etapa7(scene, groundMaterial, groundbrick);
 
             const makeCurve = (range, nbSteps) => {
                 const path = [];
@@ -105,23 +126,13 @@
             tube.position.z = 0;
 
             tube.rotation.x = 1;
-            tube2.rotation.x = 1;
-
-
-            // Skybox - a imagem do fundo
-            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
-            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox4", scene);
-            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-            skyboxMaterial.disableLighting = true;
-            skybox.material = skyboxMaterial;
+            tube2.rotation.x = 1;            
             
             return scene;
 
         };
 
-        function etapa1(scene, sphere, groundMaterial) {
+        function etapa1(scene, sphere, groundMaterial, groundbrick) {
 
             var ground = BABYLON.Mesh.CreateGround("ground1", 10, 40, 2, scene);
             ground.position.z = -20;            
@@ -132,14 +143,19 @@
             holder1.position.y = 1;
             holder1.position.x = 4;
             holder1.position.z = -20;
+            holder1.material = groundbrick;
+
 
             var holder2 = BABYLON.MeshBuilder.CreateBox("holder2", { width: 2, height: 2, depth: 40 }, scene);
             holder2.position.y = 1;
             holder2.position.x = -4;
             holder2.position.z = -20;
+            holder2.material = groundbrick;
+
 
             sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 }, scene);
             ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            //sphere.material = esphereTexture;
 
             scene.registerBeforeRender(function () {
                 sphere.rotate(BABYLON.Axis.Z, 0.1);
@@ -147,7 +163,7 @@
             })
         }
 
-        function etapa2(scene, sphere, cont, groundMaterial) {
+        function etapa2(scene, sphere, cont, groundMaterial, groundbrick) {
             var ground2 = BABYLON.Mesh.CreateGround("ground2", 10, 40, 2, scene);
             ground2.position.y = -30;
             ground2.position.z = -60;
@@ -170,17 +186,23 @@
 
             cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
             cylinder2.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder2, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+            cylinder2.material = groundbrick;
 
             var base = BABYLON.MeshBuilder.CreateBox("base", { width: 6, depth: 6, height: 3 }, scene);
             base.position = new BABYLON.Vector3(0, -30, -10);
             base.physicsImpostor = new BABYLON.PhysicsImpostor(base, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            base.material = groundMaterial;
+
 
             var upright = BABYLON.MeshBuilder.CreateBox("upright", { width: 3, depth: 3, height: 24 }, scene);
             upright.position = new BABYLON.Vector3(0, -17, -10);
             upright.physicsImpostor = new BABYLON.PhysicsImpostor(upright, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            upright.material = groundbrick;
 
             var arm = BABYLON.MeshBuilder.CreateBox("arm", { width: 40, depth: 1, height: 1 }, scene);
             arm.position = new BABYLON.Vector3(-15, -4.5, -10);
+            arm.material = groundMaterial;
+
 
 
             let joint = new BABYLON.HingeJoint({
@@ -203,7 +225,7 @@
             });
         }
 
-        function etapa3(scene, groundMaterial) {
+        function etapa3(scene, groundMaterial, groundbrick) {
             var ground3 = BABYLON.Mesh.CreateGround("ground3", 10, 40, 2, scene);
             ground3.position.y = -8;
             ground3.position.z = 10;
@@ -225,16 +247,18 @@
             brick.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
             brick.physicsImpostor = new BABYLON.PhysicsImpostor(brick, BABYLON.PhysicsImpostor.BoxImpostor, { mass: brickMass, friction: 0 }, scene);
             var cont2 = 0
-            etapa4(scene, brick, cont2);
+            etapa4(scene, brick, cont2, groundMaterial, groundbrick);
         }
 
-        function etapa4(scene, brick, cont2) {
+        function etapa4(scene, brick, cont2, groundMaterial, groundbrick) {
             var cannonfoot = BABYLON.MeshBuilder.CreateBox("Foot", { width: 2, height: 1, depth: 3 }, scene);
-            cannonfoot.position.set(33, -7.5, 28);
+            cannonfoot.position.set(33, -7.5, 25);
             cannonfoot.rotation.set(0, 0, 0);
             cannonfoot.physicsImpostor = new BABYLON.PhysicsImpostor(cannonfoot, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 50000, friction: 0 }, scene);
             var cannontube = BABYLON.MeshBuilder.CreateCylinder("Tube", { height: 5, diameter: 2, tessellation: 16 }, scene);
-            cannontube.position.set(0, 2, 0);
+            cannontube.position.set(0, 1.5, 1);
+            cannonfoot.material = groundMaterial;
+            cannontube.material = groundbrick;
 
             var itarg = BABYLON.Mesh.CreateBox("targ", 1, scene);
             itarg.position.y = 10;
@@ -323,7 +347,7 @@
             brick9.physicsImpostor = new BABYLON.PhysicsImpostor(brick9, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 2, friction: 0 }, scene);
         }
 
-        function etapa6(scene) {
+        function etapa6(scene, groundbrick) {
             var brick10 = BABYLON.MeshBuilder.CreateBox("", { width: 5, height: 7, depth: 2 }, scene)
             brick10.position = new BABYLON.Vector3(33, -14.5, 73);
             brick10.material = new BABYLON.StandardMaterial("", scene);
@@ -362,28 +386,30 @@
             polygon.position.y = -18;
             polygon.position.z = 85;
             polygon.physicsImpostor = new BABYLON.PhysicsImpostor(polygon, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 }, scene);
+            polygon.material = groundbrick;
         }
 
-        function etapa7(scene) {
+        function etapa7(scene, groundMaterial, groundbrick) {
             var brick13 = BABYLON.MeshBuilder.CreateBox("", { width: 1, height: 10, depth: 10 }, scene)
             brick13.position = new BABYLON.Vector3(33, -50, 85.5);
             brick13.material = new BABYLON.StandardMaterial("", scene);
-            brick13.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
             brick13.rotation.z = 2;
             brick13.physicsImpostor = new BABYLON.PhysicsImpostor(brick13, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            brick13.material = groundbrick;
 
             var ground6 = BABYLON.Mesh.CreateGround("ground6", 25, 10, 2, scene);
             ground6.position.y = -51.7;
             ground6.position.z = 85.5;
             ground6.position.x = 17;
             ground6.physicsImpostor = new BABYLON.PhysicsImpostor(ground6, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            ground6.material = groundMaterial;
 
             var brick14 = BABYLON.MeshBuilder.CreateBox("", { width: 10, height: 1, depth: 10 }, scene)
             brick14.position = new BABYLON.Vector3(-0.5, -52.2, 85.5);
             brick14.material = new BABYLON.StandardMaterial("", scene);
             brick14.rotation.x = 3;
-            brick14.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
             brick14.physicsImpostor = new BABYLON.PhysicsImpostor(brick14, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            brick14.material = groundbrick;
 
             var holder7 = BABYLON.MeshBuilder.CreateBox("holder7", { width: 2, height: 2, depth: 10 }, scene);
             holder7.position.y = -50.7;
@@ -391,6 +417,8 @@
             holder7.position.z = 85.3;
             holder7.rotation.x = 3;
             holder7.physicsImpostor = new BABYLON.PhysicsImpostor(holder7, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 50, friction: -10000, restitution: 0 }, scene);
+            holder7.material = groundMaterial;
+
         }
 
         window.initFunction = async function () {
