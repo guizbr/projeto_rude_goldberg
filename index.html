@@ -114,32 +114,8 @@
             etapa5(scene, groundMaterial);
             etapa6(scene, groundbrick);
             etapa7(scene, groundMaterial, groundbrick);
-
-            const makeCurve = (range, nbSteps) => {
-                const path = [];
-                const stepSize = range / nbSteps;
-                for (let i = -range / 2; i < range / 2; i += stepSize) {
-                    path.push(new BABYLON.Vector3(5 * Math.sin(i * nbSteps / 400), i, 5 * Math.cos(i * nbSteps / 400)));
-                }
-                return path;
-            };
-
-            const curve = makeCurve(40, 40);
-
-            const tube = BABYLON.MeshBuilder.CreateTube("tube", { path: curve, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
-
-            const tube2 = BABYLON.MeshBuilder.CreateTube("tube2", { path: curve, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
-
-            tube2.position.x = -4.5;
-            tube2.position.y = -65;
-            tube2.position.z = 65;
-
-            tube.position.x = 0;
-            tube.position.y = 0;
-            tube.position.z = 0;
-
-            tube.rotation.x = 1;
-            tube2.rotation.x = 1;            
+            etapa8(scene);
+            etapa9(scene);
             
             return scene;
 
@@ -432,6 +408,82 @@
             holder7.physicsImpostor = new BABYLON.PhysicsImpostor(holder7, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 50, friction: -10000, restitution: 0 }, scene);
             holder7.material = groundMaterial;
 
+        }
+
+        function etapa8(scene) {
+            const makeCurve = (range, nbSteps) => {
+                const path = [];
+                const stepSize = range / nbSteps;
+                for (let i = -range / 2; i < range / 2; i += stepSize) {
+                    path.push(new BABYLON.Vector3(5 * Math.sin(i * nbSteps / 400), i, 5 * Math.cos(i * nbSteps / 400)));
+                }
+                return path;
+            };
+
+            const curve = makeCurve(40, 40);
+
+            const tube = BABYLON.MeshBuilder.CreateTube("tube", { path: curve, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+
+            const tube2 = BABYLON.MeshBuilder.CreateTube("tube2", { path: curve, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+
+            const tube3 = BABYLON.MeshBuilder.CreateTube("tube3", { path: curve, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+
+            const tube4 = BABYLON.MeshBuilder.CreateTube("tube4", { path: curve, radius: 0.5, sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene);
+
+            tube4.position.x = -7.5;
+            tube4.position.y = -64;
+            tube4.position.z = 67;
+
+            tube3.position.x = -1.5;
+            tube3.position.y = -64;
+            tube3.position.z = 67;
+
+            tube2.position.x = -3.5;
+            tube2.position.y = -64.5;
+            tube2.position.z = 67;
+
+            tube.position.x = -5.5;
+            tube.position.y = -64.5;
+            tube.position.z = 67;
+
+            tube.rotation.x = 1;
+            tube2.rotation.x = 1;
+            tube3.rotation.x = 1;
+            tube4.rotation.x = 1;
+
+            tube.physicsImpostor = new BABYLON.PhysicsImpostor(tube, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: -1, restitution: 0 }, scene);
+            tube2.physicsImpostor = new BABYLON.PhysicsImpostor(tube2, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: -1, restitution: 0 }, scene);
+            tube3.physicsImpostor = new BABYLON.PhysicsImpostor(tube3, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: -1, restitution: 0 }, scene);
+            tube4.physicsImpostor = new BABYLON.PhysicsImpostor(tube4, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: -1, restitution: 0 }, scene);
+        }
+
+        function etapa9(scene) {
+            var brick15 = BABYLON.MeshBuilder.CreateBox("", { width: 20, height: 1, depth: 20 }, scene)
+            brick15.position = new BABYLON.Vector3(-0.5, -52.2, 85.5);
+            brick15.material = new BABYLON.StandardMaterial("", scene);
+            brick15.position.x = -7.5;
+            brick15.position.y = -76;
+            brick15.position.z = 38;
+            brick15.rotation.x = 3;
+            brick15.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+            brick15.physicsImpostor = new BABYLON.PhysicsImpostor(brick15, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+
+            var holder9 = BABYLON.MeshBuilder.CreateBox("holder9", { width: 2, height: 2, depth: 11 }, scene);
+            holder9.position.y = -75;
+            holder9.position.x = -2;
+            holder9.position.z = 33;
+            holder9.rotation.x = 3;
+            holder9.rotation.y = 7;
+
+            var holder10 = BABYLON.MeshBuilder.CreateBox("holder9", { width: 2, height: 2, depth: 11 }, scene);
+            holder10.position.y = -75;
+            holder10.position.x = -13;
+            holder10.position.z = 33;
+            holder10.rotation.x = 3;
+            holder10.rotation.y = -7;
+
+            holder9.physicsImpostor = new BABYLON.PhysicsImpostor(holder9, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            holder10.physicsImpostor = new BABYLON.PhysicsImpostor(holder10, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
         }
 
         window.initFunction = async function () {
