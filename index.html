@@ -397,7 +397,7 @@
             brick14.position = new BABYLON.Vector3(-0.5, -52.2, 85.5);
             brick14.material = new BABYLON.StandardMaterial("", scene);
             brick14.rotation.x = 3;
-            brick14.physicsImpostor = new BABYLON.PhysicsImpostor(brick14, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
+            brick14.physicsImpostor = new BABYLON.PhysicsImpostor(brick14, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: -100, restitution: 0 }, scene);
             brick14.material = groundbrick;
 
             var holder7 = BABYLON.MeshBuilder.CreateBox("holder7", { width: 2, height: 2, depth: 10 }, scene);
@@ -405,7 +405,7 @@
             holder7.position.x = -4.5;
             holder7.position.z = 85.3;
             holder7.rotation.x = 3;
-            holder7.physicsImpostor = new BABYLON.PhysicsImpostor(holder7, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 50, friction: -10000, restitution: 0 }, scene);
+            holder7.physicsImpostor = new BABYLON.PhysicsImpostor(holder7, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 5000, friction: -10000, restitution: 0 }, scene);
             holder7.material = groundMaterial;
 
         }
