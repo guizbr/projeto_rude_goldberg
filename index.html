@@ -53,8 +53,21 @@
             var scene = new BABYLON.Scene(engine);
             scene.enablePhysics();
 
-            var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 2.5, 50, BABYLON.Vector3.Zero(), scene);
+            // Parameters: name, position, scene
+            var camera = new BABYLON.FlyCamera("FlyCamera", new BABYLON.Vector3(0, 5, -10), scene);
 
+            // Airplane like rotation, with faster roll correction and banked-turns.
+            // Default is 100. A higher number means slower correction.
+            camera.rollCorrect = 10;
+            // Default is false.
+            camera.bankedTurn = true;
+            // Defaults to 90° in radians in how far banking will roll the camera.
+            camera.bankedTurnLimit = Math.PI / 2;
+            // How much of the Yawing (turning) will affect the Rolling (banked-turn.)
+            // Less than 1 will reduce the Rolling, and more than 1 will increase it.
+            camera.bankedTurnMultiplier = 2;
+
+            // This attaches the camera to the canvas
             camera.attachControl(canvas, true);
 
             // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
@@ -135,7 +148,7 @@
         function etapa1(scene, sphere, groundMaterial, groundbrick) {
 
             var ground = BABYLON.Mesh.CreateGround("ground1", 10, 40, 2, scene);
-            ground.position.z = -20;            
+            ground.position.z = -20;
             ground.material = groundMaterial;
 
 
@@ -233,7 +246,7 @@
             ground3.physicsImpostor = new BABYLON.PhysicsImpostor(ground3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0, restitution: 0 }, scene);
             ground3.material = groundMaterial;
 
-            
+
             var brickMass = 1;
             var brickLength = 2;
             var brickDepth = 1;
