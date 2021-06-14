@@ -42,35 +42,50 @@
 <body>
     <canvas id="renderCanvas"></canvas>
     <script>
-        var canvas = document.getElementById("renderCanvas");
+            var canvas = document.getElementById("renderCanvas");
 
-        var engine = null;
-        var scene = null;
-        var sceneToRender = null;
-        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
-        var global = {};
-        var createScene = function () {
+            var engine = null;
+            var scene = null;
+            var sceneToRender = null;
+            var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+            var global = {};
+            var createScene = function () {
 
             var scene = new BABYLON.Scene(engine);
             global.scene = scene;
             scene.enablePhysics();
 
-            // Parameters: name, position, scene
-            var camera = new BABYLON.FlyCamera("FlyCamera", new BABYLON.Vector3(0, 5, -10), scene);
+            var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 3, -20), scene);
 
-            // Airplane like rotation, with faster roll correction and banked-turns.
-            // Default is 100. A higher number means slower correction.
-            camera.rollCorrect = 10;
-            // Default is false.
-            camera.bankedTurn = true;
-            // Defaults to 90° in radians in how far banking will roll the camera.
-            camera.bankedTurnLimit = Math.PI / 2;
-            // How much of the Yawing (turning) will affect the Rolling (banked-turn.)
-            // Less than 1 will reduce the Rolling, and more than 1 will increase it.
-            camera.bankedTurnMultiplier = 2;
 
-            // This attaches the camera to the canvas
+            camera.setTarget(BABYLON.Vector3.Zero());
+
+            camera.ellipsoid = new BABYLON.Vector3(1, 1.5, 1);
             camera.attachControl(canvas, true);
+
+            //Controls  WASD
+
+            camera.keysUp.push(87);
+            camera.keysDown.push(83);
+            camera.keysRight.push(68);
+            camera.keysLeft.push(65);
+
+            //Controls...Mouse
+            //We start without being locked.
+            var isLocked = false;
+
+            // On click event, request pointer lock
+            scene.onPointerDown = function (evt) {
+
+                //true/false check if we're locked, faster than checking pointerlock on each single click.
+                if (!isLocked) {
+                    canvas.requestPointerLock = canvas.requestPointerLock || canvas.msRequestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+                    if (canvas.requestPointerLock) {
+                        canvas.requestPointerLock();
+                    }
+                }
+
+            };
 
             // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
